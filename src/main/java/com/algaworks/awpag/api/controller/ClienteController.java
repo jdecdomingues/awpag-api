@@ -26,10 +26,10 @@ public class ClienteController {
         cliente2.setEmail("teste@teste.com");
 
         var cliente3 = new Cliente();
-        cliente2.setId(3L);
-        cliente2.setNome("Maria xpto");
-        cliente2.setTelefone("21 99999-9999");
-        cliente2.setEmail("teste@teste.com");
+        cliente3.setId(3L);
+        cliente3.setNome("Maria xpto");
+        cliente3.setTelefone("21 99999-9999");
+        cliente3.setEmail("teste@teste.com");
 
         return Arrays.asList(cliente1, cliente2, cliente3);
     }
