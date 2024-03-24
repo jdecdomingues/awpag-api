@@ -1,30 +1,79 @@
 package com.algaworks.awpag.api.controller;
 
 import com.algaworks.awpag.domain.model.Cliente;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
+import com.algaworks.awpag.domain.repository.ClienteRepository;
+import com.algaworks.awpag.domain.service.CadastroClienteService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/clientes")
 public class ClienteController {
 
-    @GetMapping("/clientes")
+    private final CadastroClienteService cadastroClienteService;
+    private final ClienteRepository clienteRepository;
 
+    @GetMapping
     public List<Cliente> listar() {
-        var cliente1 = new Cliente();
-        cliente1.setId(1L);
-        cliente1.setNome("João");
-        cliente1.setTelefone("21 99999-9999");
-        cliente1.setEmail("teste@teste.com");
+        return clienteRepository.findAll();
+    }
 
-        var cliente2 = new Cliente();
-        cliente2.setId(2L);
-        cliente2.setNome("Maria");
-        cliente2.setTelefone("21 99999-9999");
-        cliente2.setEmail("teste@teste.com");
+    @GetMapping(value = "{clienteId}")
+    public ResponseEntity<Object> buscar(@PathVariable Long clienteId) {
+        Optional<Cliente> cliente = clienteRepository.findById(clienteId);
 
-        return Arrays.asList(cliente1, cliente2);
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "nome/{nome}")
+    public ResponseEntity<Object> buscarNome(@PathVariable String nome) {
+        Optional<Cliente> clienteNome = clienteRepository.findByNome(nome);
+
+        if (clienteNome.isPresent()) {
+            return ResponseEntity.ok(clienteNome.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/cadastrar")
+    public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
+        return cadastroClienteService.salvar(cliente);
+    }
+
+    @PutMapping("/{clienteId}")
+        public ResponseEntity<Cliente> atualizar (@PathVariable Long clienteId, @Valid @RequestBody Cliente cliente) {
+        if (!clienteRepository.existsById(clienteId)) {
+            return ResponseEntity.notFound().build();
+        }
+        cliente.setId(clienteId);
+        cliente = cadastroClienteService.salvar(cliente);
+        return ResponseEntity.ok(cliente);
+    }
+
+    @DeleteMapping("/{clienteId}")
+    public ResponseEntity<Void> excluir (@PathVariable Long clienteId) {
+
+        if (!clienteRepository.existsById(clienteId)) {
+            return ResponseEntity.notFound().build();
+        }
+        cadastroClienteService.excluir(clienteId);
+        return ResponseEntity.noContent().build();
     }
 }
+
+
+
