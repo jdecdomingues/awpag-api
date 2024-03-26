@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @AllArgsConstructor
 @Service
@@ -14,7 +15,7 @@ public class ParcelamentoService {
     private final ParcelamentoRepository parcelamentoRepository;
 
     public Parcelamento cadastrar(Parcelamento novoParcelamento)  {
-        novoParcelamento.setDataCriacao(LocalDateTime.now());
+        novoParcelamento.setDataCriacao(OffsetDateTime.now());
 
         return parcelamentoRepository.save(novoParcelamento);
     }

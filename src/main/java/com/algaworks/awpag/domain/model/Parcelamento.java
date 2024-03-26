@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode
@@ -41,5 +42,5 @@ public class Parcelamento {
     @Positive
     @Max(12)
     private Integer quantidadeParcelas;
-    private LocalDateTime dataCriacao;
+    private OffsetDateTime dataCriacao;
 }
